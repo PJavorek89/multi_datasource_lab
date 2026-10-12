@@ -24,14 +24,14 @@ public class LegacyDBConfig {
     //adresa a prihlasovaci udaje
     @Bean
     @ConfigurationProperties("app.datasource.legacy")
-    public DataSourceProperties legacyDataSource() {
+    public DataSourceProperties legacyDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     //connection pool ddo oracle
     @Bean
-    public DataSource legacyDatasource(
-            @Qualifier("legacyDataSource") DataSourceProperties dataSourceProperties
+    public DataSource legacyDataSource(
+            @Qualifier("legacyDataSourceProperties") DataSourceProperties dataSourceProperties
     ) {
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
@@ -39,11 +39,11 @@ public class LegacyDBConfig {
     //MyBatis nad poolem obdoba entity manager factory
     @Bean
     public SqlSessionFactory legacySqlSessionFactory(
-            @Qualifier("legacyDatasource") DataSource dataSource) throws Exception {
+            @Qualifier("legacyDataSource") DataSource dataSource) throws Exception {
             var factory = new SqlSessionFactoryBean();
             factory.setDataSource(dataSource);
             factory.setMapperLocations(new PathMatchingResourcePatternResolver()
-                    .getResource("classpath:mapper/legacy/*.xml")); //kde lezi XML s SQL
+                    .getResources("classpath*:mapper/legacy/*.xml")); //kde lezi XML s SQL
 
             var config = new org.apache.ibatis.session.Configuration(); //plny naazev koliduje s @Configuration
             config.setMapUnderscoreToCamelCase(true); //PART_NO -> partNo
@@ -54,7 +54,7 @@ public class LegacyDBConfig {
 
     //nastaveni transactional na JDBC
     @Bean
-    public PlatformTransactionManager legacyTransactionalManager(
+    public PlatformTransactionManager legacyTranscationalManager(
             @Qualifier("legacyDataSource") DataSource dataSource
     ) {
         return new DataSourceTransactionManager(dataSource);
