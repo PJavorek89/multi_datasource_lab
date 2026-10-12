@@ -54,7 +54,7 @@ public class LegacyDBConfig {
 
     //nastaveni transactional na JDBC
     @Bean
-    public PlatformTransactionManager legacyTranscationalManager(
+    public PlatformTransactionManager legacyTransactionManager(
             @Qualifier("legacyDataSource") DataSource dataSource
     ) {
         return new DataSourceTransactionManager(dataSource);

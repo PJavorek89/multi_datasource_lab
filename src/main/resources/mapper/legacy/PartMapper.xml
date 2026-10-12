@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javorek.lab.legacy.mapper.PartMapper">  <!-- plný název rozhraní -->
+
+    <!-- record nemá settery → mapování přes konstruktor, pořadí = pořadí parametrů -->
+    <resultMap id="partMap" type="com.javorek.lab.legacy.model.Part">
+        <constructor>
+            <idArg column="part_no"    javaType="java.lang.String"/>
+            <arg   column="name"       javaType="java.lang.String"/>
+            <arg   column="category"   javaType="java.lang.String"/>
+            <arg   column="plant"      javaType="java.lang.String"/>
+            <arg   column="price"      javaType="java.math.BigDecimal"/>
+            <arg   column="created_at" javaType="java.time.LocalDate"/>
+        </constructor>
+    </resultMap>
+
+    <select id="findParts" resultMap="partMap">       <!-- id = název metody v rozhraní -->
+        SELECT part_no, name, category, plant, price, created_at
+        FROM parts
+        <where>                                       <!-- WHERE jen když je aspoň 1 podmínka -->
+            <if test="category != null">
+                AND category = #{category}            <!-- #{} = bind parametr (?) -->
+            </if>
+            <if test="plant != null">
+                AND plant = #{plant}
+            </if>
+            <if test="minPrice != null">
+                AND price &gt;= #{minPrice}           <!-- >= se v XML píše jako &gt;= -->
+            </if>
+            <if test="partNos != null and partNos.size() > 0">
+                AND part_no IN
+                <foreach item="no" collection="partNos" open="(" separator="," close=")">
+                    #{no}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY ${sort}                              <!-- ${} = vloženo jako text! jen přes whitelist -->
+        FETCH FIRST 100 ROWS ONLY
+    </select>
+</mapper>

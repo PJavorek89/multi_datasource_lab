@@ -7,6 +7,6 @@ public record Part(String partNo,
                    String name,
                    String category,
                    String plant,
-                   BigDecimal prive,
-                   LocalDate createAt) {
+                   BigDecimal price,
+                   LocalDate createdAt) {
 }

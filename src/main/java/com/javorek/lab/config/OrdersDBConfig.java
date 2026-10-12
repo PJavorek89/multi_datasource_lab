@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories( //kde hledat JPA repository
-        basePackages = "com.pavel.lab.orders",
+        basePackages = "com.javorek.lab.orders",
         entityManagerFactoryRef = "ordersEntityManagerFactory",
         transactionManagerRef = "ordersTransactionManager"
 )
@@ -52,7 +52,7 @@ public class OrdersDBConfig {
 
     @Bean
     @Primary
-    public PlatformTransactionManager orderTransactionalManager(
+    public PlatformTransactionManager ordersTransactionManager(
             @Qualifier("ordersEntityManagerFactory") EntityManagerFactory emf
             ) {
         return new JpaTransactionManager(emf); //aplikace bude schopna pouzivat @Transactional
