@@ -1,0 +1,18 @@
+spring:
+  application:
+    name:multi_datasource_lab
+app:
+  datasource:
+    orders:
+      url: jdbc:postgresql://localhost:6000/orders
+      username: orders
+      password: orders
+    legacy:
+      url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+      username: legacy
+      password: legacy
+
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.orm.jdbc.bind: trace

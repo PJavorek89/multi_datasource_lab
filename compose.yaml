@@ -1,0 +1,21 @@
+# Spuštění: docker compose up -d
+# Oracle startuje první spuštění cca 1–2 min (sleduj: docker compose logs -f oracle → "DATABASE IS READY TO USE!")
+
+services:
+  postgres:   #vlastni DB aplikace (JPA)
+    image: postgres:18
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: orders
+      POSTGRES_PASSWORD: orders
+    ports:
+      - "6000:5432"
+
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    environment:
+      ORACLE_PASSWORD: oracle
+      APP_USER: legacy # heslo pro SYS/SYSTEM
+      APP_USER_PASSWORD: legacy # vytvoří se v PDB FREEPDB1
+    ports:
+      - "1521:1521"
